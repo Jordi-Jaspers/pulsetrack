@@ -1,0 +1,101 @@
+# ======= APPLICATION CONFIGURATION =======
+application:
+  version: 0.0.0-SNAPSHOT
+  name: ${SPRING_APPLICATION_NAME:pulsetrack-development}
+  url: ${SPRING_APPLICATION_URL:http://localhost:5173}
+  email:
+    host: ${EMAIL_HOST:localhost}
+    port: ${EMAIL_PORT:2500}
+    address: ${EMAIL_ADDRESS:no-reply@localhost}
+    username: ${EMAIL_USERNAME:no-login@localhost.com}
+    password: ${EMAIL_PASSWORD:password}
+    protocol: smtp
+    encoding: UTF-8
+
+security:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
+
+# ======= MANAGEMENT ENDPOINTS =======
+management:
+  endpoints:
+    web:
+      exposure.include: health
+      base-path: /api/actuator
+
+# ====== SERVER CONFIG ======
+server:
+  port: 8080
+
+tomcat:
+  ajp:
+    enabled: ${TOMCAT_AJP_ENABLED:true}
+    port: ${TOMCAT_AJP_PORT:8009}
+    secretRequired: ${TOMCAT_AJP_SECRET_REQUIRED:false}
+    secret: ${TOMCAT_AJP_SECRET:6qyuET3rNuzYRBtrBQjh8zCe}
+
+# ======= LOGGING CONFIG =======
+logging:
+  config: ${LOGGING_CONFIG:./config/logback-spring.xml}
+
+# ======= SPRINGDOC CONFIGURATION <https://springdoc.org/> =======
+springdoc:
+  show-actuator: true
+  pre-loading-enabled: true
+  show-login-endpoint: true
+  enable-spring-security: true
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /api/public/docs/openapi.html
+  api-docs:
+    path: /api/public/docs
+
+# ======= SPRING CONFIGURATION =======
+spring:
+  profiles.include: ${SPRING_PROFILES_INCLUDE:development}
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000
+      enable-statistics: true
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:redis}
+      port: ${SPRING_REDIS_PORT:6379}
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://timescale_db:5432/tst_pulsetrack}
+    username: ${SPRING_DATASOURCE_USERNAME:username}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+
+  jackson:
+    property-naming-strategy: LOWER_CAMEL_CASE
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        enable_lazy_load_no_trans: true
+        batch_versioned_data: true
+        jdbc.batch_size: 100
+        order_updates: true
+        order_inserts: true
+
+# ======= HAWAII AUTOCONFIGURATION OVERRIDE =======
+hawaii:
+  async:
+    configuration: ${ASYNC_CONFIG:./config/async-config.yml}
+  crypto:
+    enabled: false
+  logging:
+    filters:
+      transaction-id:
+        enabled: true
+      request-id:
+        enabled: true

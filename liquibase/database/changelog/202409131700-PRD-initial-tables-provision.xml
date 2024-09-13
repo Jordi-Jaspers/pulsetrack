@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+                   logicalFilePath="202409131700-PRD-initial-tables-provision.xml">
+    <changeSet id="202409131700-PRD-initial-tables-postgres-1" author="jordi.jaspers" context="local">
+        <ext:documentation>
+            Adding the necessary extensions in order for TimescaleDB to work. These extensions must be executed with a superuser.
+            That's why the context is set to "vagrant". locally we do have a superuser, but in the CI/CD pipeline we don't.
+        </ext:documentation>
+
+        <sql>
+            CREATE
+            EXTENSION IF NOT EXISTS timescaledb;
+            CREATE
+            EXTENSION IF NOT EXISTS timescaledb_toolkit;
+            CREATE
+            EXTENSION IF NOT EXISTS citext;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
