@@ -50,9 +50,21 @@ springdoc:
   api-docs:
     path: /api/public/docs
 
+# ====== KEYCLOAK CONFIG ======
+keycloak:
+  clientId: ${KEYCLOAK_CLIENT_ID:pulsetrack-client}
+
 # ======= SPRING CONFIGURATION =======
 spring:
   profiles.include: ${SPRING_PROFILES_INCLUDE:development}
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: ${SECURITY_JWT_ISSUER_URI:https://keycloak.url/auth/realms/smcboits}
+          jwk-set-uri: ${SECURITY_JWK_SET_URI:https://keycloak.url/auth/realms/pulsetrack/protocol/openid-connect/certs}
+
   cache:
     type: redis
     redis:
